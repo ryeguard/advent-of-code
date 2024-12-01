@@ -10,63 +10,56 @@ import (
 )
 
 func day01(input []string) (int, int, error) {
-	var left, right []int
+	var leftLocations, rightLocations []int
 	for _, row := range input {
 		var v1, v2 int
 		_, err := fmt.Sscanf(row, "%d %d", &v1, &v2)
 		if err != nil {
 			return 0, 0, fmt.Errorf("scan: %w", err)
 		}
-		left = append(left, v1)
-		right = append(right, v2)
+		leftLocations = append(leftLocations, v1)
+		rightLocations = append(rightLocations, v2)
 	}
 
-	part1, err := day01Part1(left, right)
+	totalDistance, err := day01Part1(leftLocations, rightLocations)
 	if err != nil {
 		return 0, 0, fmt.Errorf("part 1: %w", err)
 	}
 
-	part2, err := day01Part2(left, right)
-	if err != nil {
-		return 0, 0, fmt.Errorf("part 2: %w", err)
-	}
+	similarityScore := day01Part2(leftLocations, rightLocations)
 
-	return part1, part2, nil
+	return totalDistance, similarityScore, nil
 
 }
 
-func day01Part1(left, right []int) (int, error) {
-	if len(left) != len(right) {
+func day01Part1(leftLocations, rightLocations []int) (totalDistance int, err error) {
+	if len(leftLocations) != len(rightLocations) {
 		return 0, errors.New("left and right lists have different length")
 	}
 
-	slices.Sort(left)
-	slices.Sort(right)
+	slices.Sort(leftLocations)
+	slices.Sort(rightLocations)
 
-	var sum int
-	for i := 0; i < len(left); i++ {
-		distance := int(math.Abs(float64(left[i] - right[i])))
-		sum += distance
+	for i := 0; i < len(leftLocations); i++ {
+		distance := int(math.Abs(float64(leftLocations[i] - rightLocations[i])))
+		totalDistance += distance
 	}
-
-	return sum, nil
+	return
 }
 
-func day01Part2(left, right []int) (int, error) {
-	var lOccurances, rOccurances = map[int]int{}, map[int]int{}
+func day01Part2(left, right []int) (similarityScore int) {
+	var leftOccurrences, rightOccurrences = map[int]int{}, map[int]int{}
 	for _, l := range left {
-		lOccurances[l]++
+		leftOccurrences[l]++
 	}
 	for _, r := range right {
-		rOccurances[r]++
+		rightOccurrences[r]++
 	}
 
-	var similarityScore int
-	for k, v := range lOccurances {
-		similarityScore += k * v * rOccurances[k]
+	for k, v := range leftOccurrences {
+		similarityScore += k * v * rightOccurrences[k]
 	}
-
-	return similarityScore, nil
+	return
 }
 
 func readInput(filename string) ([]string, error) {
