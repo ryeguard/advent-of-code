@@ -31,6 +31,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(part1, part2)
 
+	input, err = readInput("day02-input.txt")
+	if err != nil {
+		panic(err)
+	}
+	part1, part2, err = day02(input)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println(part1, part2)
 }
