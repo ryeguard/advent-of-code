@@ -7,67 +7,137 @@ import (
 	"strings"
 )
 
-func day02(reports []string) (int, int, error) {
-
+func day02Part1(reports []string) (int, error) {
 	var sumSafeReports int
 
-reportLoop:
-	for r, report := range reports {
+	for _, report := range reports {
 
-		levels := strings.Split(report, " ")
+		split := strings.Split(report, " ")
 
-		var previousLevel int
-		var isIncreasing *bool = nil
-		for i, l := range levels {
-			v, err := strconv.Atoi(l)
+		var levels []int
+		for _, s := range split {
+			l, err := strconv.Atoi(s)
 			if err != nil {
-				return 0, 0, fmt.Errorf("atoi: %w", err)
+				return 0, fmt.Errorf("atoi: %w", err)
 			}
-
-			if i == 0 {
-				previousLevel = v
-				continue
-			}
-
-			if isIncreasing == nil && v > previousLevel {
-				isIncreasing = ptrTo(true)
-				if v-previousLevel > 3 {
-					continue reportLoop
-				}
-				previousLevel = v
-				continue
-			} else if isIncreasing == nil && v < previousLevel {
-				isIncreasing = ptrTo(false)
-				if v-previousLevel < -3 {
-					continue reportLoop
-				}
-				previousLevel = v
-				continue
-			}
-
-			diff := int(math.Abs(float64(v - previousLevel)))
-
-			if diff == 0 {
-				continue reportLoop
-			}
-
-			increased := v > previousLevel
-
-			if *isIncreasing != increased {
-				continue reportLoop
-			}
-
-			if diff > 3 {
-				continue reportLoop
-			}
-			previousLevel = v
+			levels = append(levels, l)
 		}
-		sumSafeReports++
-		fmt.Printf("report %v is safe (%v) %v\n", r, sumSafeReports, levels)
+
+		isSafe := checkReportSafe(levels)
+		if isSafe {
+			sumSafeReports++
+		}
+
 	}
-	return sumSafeReports, 0, nil
+	return sumSafeReports, nil
 }
 
-func ptrTo(b bool) *bool {
-	return &b
+func checkReportSafe(levels []int) bool {
+	shouldIncrease := levels[len(levels)-1] > levels[0]
+
+	for i := 1; i < len(levels); i++ {
+		diff := levels[i] - levels[i-1]
+		absDiff := int(math.Abs(float64(diff)))
+
+		increased := diff > 0
+		okDiff := absDiff > 0 && absDiff <= 3
+
+		if shouldIncrease != increased || !okDiff {
+			return false
+		}
+	}
+	return true
+}
+
+func checkReportSafeWithDampening(levels []int) bool {
+	badLevels := map[int]bool{}
+
+	shouldIncrease := levels[len(levels)-1] > levels[0]
+
+	for i := 0; i < len(levels); i++ {
+		if i != 0 {
+			diff := levels[i] - levels[i-1]
+			abs := int(math.Abs(float64(diff)))
+
+			increased := diff > 0
+			okDiff := abs > 0 && abs <= 3
+
+			if shouldIncrease != increased || !okDiff {
+				badLevels[i] = true
+			}
+		}
+		if i < len(levels)-1 {
+			diff := levels[i+1] - levels[i]
+			abs := int(math.Abs(float64(diff)))
+
+			increased := diff > 0
+			okDiff := abs > 0 && abs <= 3
+
+			if shouldIncrease != increased || !okDiff {
+				badLevels[i] = true
+			}
+		}
+	}
+
+	if len(badLevels) == 0 {
+		return true
+	}
+
+	for k := range badLevels {
+		_, newLevels := pop(k, levels)
+		if checkReportSafe(newLevels) {
+			return true
+		}
+	}
+	return false
+}
+
+func day02Part2(reports []string) (int, error) {
+	var sumSafeReports int
+
+	for _, report := range reports {
+
+		split := strings.Split(report, " ")
+
+		var levels []int
+		for _, s := range split {
+			l, err := strconv.Atoi(s)
+			if err != nil {
+				return 0, fmt.Errorf("atoi: %w", err)
+			}
+			levels = append(levels, l)
+		}
+
+		isSafe := checkReportSafeWithDampening(levels)
+		if isSafe {
+			sumSafeReports++
+		}
+	}
+	return sumSafeReports, nil
+}
+
+func day02(reports []string) (int, int, error) {
+	part1, err := day02Part1(reports)
+	if err != nil {
+		return 0, 0, fmt.Errorf("part 1: %w", err)
+	}
+
+	part2, err := day02Part2(reports)
+	if err != nil {
+		return 0, 0, fmt.Errorf("part 2: %w", err)
+	}
+
+	return part1, part2, nil
+}
+
+func pop(index int, list []int) (int, []int) {
+	if len(list) == 0 {
+		return 0, nil
+	}
+	listCopy := append([]int(nil), list...)
+	v := listCopy[index]
+	left := listCopy[:index]
+	right := listCopy[index+1:]
+	l := append(left, right...)
+	return v, l
 }
