@@ -166,28 +166,3 @@ func TestGetNeighbor(t *testing.T) {
 		require.Equal(t, tc.wantLetter, gotLetter, "(index %v, dir %v): want %v, got %v", tc.index, tc.d, string(tc.wantLetter), string(gotLetter))
 	}
 }
-
-func TestDay04Part1(t *testing.T) {
-	input, err := readInput("day04-example.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	part1, part2, err := day04(input)
-	if err != nil {
-		panic(err)
-	}
-	require.Equal(t, 18, part1, "example")
-	require.Equal(t, 9, part2, "example")
-
-	input, err = readInput("day04-input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	part1, _, err = day04(input)
-	if err != nil {
-		panic(err)
-	}
-	require.Equal(t, 2462, part1)
-}

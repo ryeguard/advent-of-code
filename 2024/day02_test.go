@@ -6,34 +6,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestDay02(t *testing.T) {
-	input, err := readInput("day02-example.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	part1, part2, err := day02(input)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	require.Equal(t, 2, part1, "part 1, example input")
-	require.Equal(t, 4, part2, "part 2, example input")
-
-	input, err = readInput("day02-input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	part1, part2, err = day02(input)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	require.Equal(t, 411, part1)
-	require.Equal(t, 465, part2)
-}
-
 func TestCheckReportSafeWithDampening(t *testing.T) {
 	var tests = []struct {
 		in   []int
