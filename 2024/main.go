@@ -31,8 +31,8 @@ func main() {
 		4,
 	}
 
-	for d := range daysToRun {
-		input, err := readInput(fmt.Sprintf("day%02d-input.txt", d))
+	for _, d := range daysToRun {
+		input, err := readInput(fmt.Sprintf("input_data/day%02d.txt", d))
 		if err != nil {
 			panic(err)
 		}
