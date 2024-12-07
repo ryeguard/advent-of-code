@@ -173,11 +173,12 @@ func TestDay04Part1(t *testing.T) {
 		panic(err)
 	}
 
-	part1, _, err := day04(input)
+	part1, part2, err := day04(input)
 	if err != nil {
 		panic(err)
 	}
 	require.Equal(t, 18, part1, "example")
+	require.Equal(t, 9, part2, "example")
 
 	input, err = readInput("day04-input.txt")
 	if err != nil {

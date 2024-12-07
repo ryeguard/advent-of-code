@@ -16,6 +16,10 @@ func day04(input []string) (int, int, error) {
 		b.height++
 	}
 
+	return day04Part1(b), day04Part2(b), nil
+}
+
+func day04Part1(b board) int {
 	sums := map[direction]int{}
 	lineSums := map[int]int{}
 	for i, l := range b.letters {
@@ -45,7 +49,33 @@ func day04(input []string) (int, int, error) {
 	for _, v := range sums {
 		sum += v
 	}
-	return sum, 0, nil
+	return sum
+}
+func day04Part2(b board) int {
+	var sum int
+	for i, l := range b.letters {
+		if l != 'A' {
+			continue
+		}
+
+		if !b.hasNeighbor(i, topLeft) || !b.hasNeighbor(i, topRight) || !b.hasNeighbor(i, bottomLeft) || !b.hasNeighbor(i, bottomRight) {
+			continue
+		}
+
+		tl, _ := b.getNeighbor(i, topLeft)
+		br, _ := b.getNeighbor(i, bottomRight)
+		if !((tl == 'M' && br == 'S') || (tl == 'S' && br == 'M')) {
+			continue
+		}
+
+		tr, _ := b.getNeighbor(i, topRight)
+		bl, _ := b.getNeighbor(i, bottomLeft)
+		if !((tr == 'M' && bl == 'S') || (tr == 'S' && bl == 'M')) {
+			continue
+		}
+		sum++
+	}
+	return sum
 }
 
 //            L  R  T  B TL TR BL BR
