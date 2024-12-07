@@ -6,6 +6,11 @@ import (
 	"os"
 )
 
+var dayFuncs = [](func([]string) (int, int, error)){
+	day00, // template
+	day01, day02, day03, day04,
+}
+
 func readInput(filename string) ([]string, error) {
 	file, err := os.Open(filename)
 	if err != nil {
@@ -22,46 +27,20 @@ func readInput(filename string) ([]string, error) {
 }
 
 func main() {
-	input, err := readInput("day01-input.txt")
-	if err != nil {
-		panic(err)
+	daysToRun := []int{
+		4,
 	}
 
-	part1, part2, err := day01(input)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(part1, part2)
+	for d := range daysToRun {
+		input, err := readInput(fmt.Sprintf("day%02d-input.txt", d))
+		if err != nil {
+			panic(err)
+		}
 
-	input, err = readInput("day02-input.txt")
-	if err != nil {
-		panic(err)
+		part1, part2, err := dayFuncs[d](input)
+		if err != nil {
+			panic(fmt.Sprintf("error day %02d: %v", d, err))
+		}
+		fmt.Printf("Day %01d\n\tPart 1: %v\n\tPart 2: %v\n", d, part1, part2)
 	}
-	part1, part2, err = day02(input)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(part1, part2)
-
-	input, err = readInput("day03-input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	part1, part2, err = day03(input)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(part1, part2)
-
-	input, err = readInput("day04-input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	part1, part2, err = day04(input)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("day 4:", part1, part2)
 }
