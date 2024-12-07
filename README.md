@@ -8,3 +8,7 @@ Previous attempts at completing Advent of Code.
 - [2022: Go](https://github.com/julian59189/AdventOfCode/tree/main/2022/simon)
 - [2023: Typescript](https://github.com/julian59189/AdventOfCode2023/tree/main/simon)
 - [2024: Go](./2024/README.md)
+
+## CLI
+
+Go Utility CLI for advent of code: [goac](./goac/README.md)
