@@ -68,7 +68,7 @@ func TestDaysWithExample(t *testing.T) {
 		}
 
 		if tc.part2.answer != nil {
-			require.Equal(t, *tc.part2.answer, part2, "%v: part 1", msg)
+			require.Equal(t, *tc.part2.answer, part2, "%v: part 2", msg)
 		} else if tc.part2.hintFunc != nil {
 			tc.part2.hintFunc(t, part2, tc.part2.incorrectGuess, "%v: part 2", msg)
 		}
