@@ -23,3 +23,17 @@ jobs:
 
       - name: Test
         run: go test -v ./...
+
+      - name: Go coverage report
+        uses: ncruces/go-coverage-report@v0.3.0
+        with:
+          badge-title: "2024 Go Coverage"
+          output-dir: "2024"
+
+        # Only run the action on push (to main)
+        # PRs lack permission to update the Wiki, nor would you want unmerged PRs to do so
+        if: |
+          github.event_name == 'push'
+
+        # If tests pass, the problem might be with the action itself, not your code
+        continue-on-error: true

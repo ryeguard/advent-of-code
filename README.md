@@ -1,5 +1,7 @@
 # advent-of-code
 
+[![2024 Go Coverage](https://github.com/ryeguard/advent-of-code/wiki/2024/coverage.svg)](https://raw.githack.com/wiki/ryeguard/advent-of-code/coverage.html)
+
 ## Previous years
 
 Previous attempts at completing Advent of Code.

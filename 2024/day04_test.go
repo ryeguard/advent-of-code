@@ -160,7 +160,6 @@ func TestGetNeighbor(t *testing.T) {
 		if !b.hasNeighbor(tc.index, tc.d) {
 			continue
 		}
-		t.Logf("index %v, dir %v has a neighbor", tc.index, tc.d)
 		gotLetter, gotIdx := b.getNeighbor(tc.index, tc.d)
 		require.Equal(t, tc.wantIdx, gotIdx)
 		require.Equal(t, tc.wantLetter, gotLetter, "(index %v, dir %v): want %v, got %v", tc.index, tc.d, string(tc.wantLetter), string(gotLetter))
