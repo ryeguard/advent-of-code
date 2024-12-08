@@ -8,7 +8,7 @@ import (
 
 var dayFuncs = [](func([]string) (int, int, error)){
 	day00, // template
-	day01, day02, day03, day04,
+	day01, day02, day03, day04, day05,
 }
 
 func readInput(filename string) ([]string, error) {
@@ -28,7 +28,7 @@ func readInput(filename string) ([]string, error) {
 
 func main() {
 	daysToRun := []int{
-		4,
+		4, 5,
 	}
 
 	for _, d := range daysToRun {
