@@ -49,6 +49,7 @@ func TestDaysWithExample(t *testing.T) {
 		{
 			day:   5,
 			part1: PartTest{answer: ptr(143)},
+			part2: PartTest{answer: ptr(123)},
 		},
 	}
 
@@ -105,6 +106,7 @@ func TestDays(t *testing.T) {
 		{
 			day:   5,
 			part1: PartTest{answer: ptr(6498)},
+			part2: PartTest{answer: ptr(5017)},
 		},
 	}
 
