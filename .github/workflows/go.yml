@@ -6,13 +6,13 @@ on:
   pull_request:
     branches: ["main"]
 
-defaults:
-  run:
-    working-directory: ./2024
-
 jobs:
-  build:
+  test-and-coverage:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./2024
+
     steps:
       - uses: actions/checkout@v4
 
@@ -21,19 +21,17 @@ jobs:
         with:
           go-version: "1.22"
 
-      - name: Test
+      - name: Generate coverage file
         run: go test -v ./...
 
       - name: Go coverage report
-        uses: ncruces/go-coverage-report@v0.3.0
+        uses: ryeguard/go-coverage-report@v0.1.1
         with:
           badge-title: "2024 Go Coverage"
-          output-dir: "2024"
+          modules-dir: "2024"
 
         # Only run the action on push (to main)
         # PRs lack permission to update the Wiki, nor would you want unmerged PRs to do so
-        if: |
-          github.event_name == 'push'
-
+        if: github.event_name == 'push'
         # If tests pass, the problem might be with the action itself, not your code
         continue-on-error: true
