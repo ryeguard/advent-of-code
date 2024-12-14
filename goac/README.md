@@ -7,7 +7,7 @@ Go utilities for Advent of Code:
 
 ## Utils
 
-Use in your Go code like
+Use the utility functions in your Go code like so:
 
 ```go
 //main.go
@@ -20,9 +20,13 @@ import (
 )
 
 func main() {
-    // ...
-}
+    input, err := goac.ReadInput("./path/to/file")
+    if err != nil {
+        panic(err)
+    }
 
+    fmt.Println(input)
+}
 ```
 
 ## CLI

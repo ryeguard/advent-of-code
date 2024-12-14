@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path"
@@ -41,9 +42,9 @@ func newDay(args map[flag]string) error {
 		return fmt.Errorf("year directory exists not as directory")
 	}
 
-	templatePath := path.Join(yearDir, "day00.go")
+	templatePath := path.Join(yearDir, "day00", "day00.go")
 	dayStr := fmt.Sprintf("%02d", day)
-	destPath := path.Join(yearDir, "day"+dayStr+".go")
+	destPath := path.Join(yearDir, "day"+dayStr, "day"+dayStr+".go")
 
 	fi, err = os.Stat(destPath)
 	if err != nil {
@@ -76,6 +77,10 @@ func copyGoTemplate(template, dest, day string) error {
 	read, err := os.ReadFile(template)
 	if err != nil {
 		return err
+	}
+
+	if err := os.MkdirAll(path.Dir(dest), fs.ModePerm); err != nil {
+		return fmt.Errorf("mkdir: %w", err)
 	}
 
 	newContents := strings.ReplaceAll(string(read), "00", day)
