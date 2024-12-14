@@ -15,14 +15,14 @@ const (
 	left
 )
 
-type position struct {
+type guard struct {
 	x, y int
 	dir  direction
 }
 
 type board struct {
 	grid  [][]rune
-	guard position
+	guard guard
 }
 
 func Solution(input []string) (int, int, error) {
@@ -31,7 +31,7 @@ func Solution(input []string) (int, int, error) {
 	for y, in := range input {
 		for x, c := range in {
 			if c == '^' {
-				b.guard = position{
+				b.guard = guard{
 					x:   x,
 					y:   y,
 					dir: up,
@@ -56,81 +56,42 @@ func Solution(input []string) (int, int, error) {
 	return part1, part2, nil
 }
 
-func (b *board) move() (done, visited bool) {
+func (b *board) move() (done bool) {
 	// mark current as visited
 	b.grid[b.guard.y][b.guard.x] = 'X'
 
-	switch b.guard.dir {
+	nextX, nextY := b.guard.next()
+
+	// bounds check
+	if nextX < 0 || nextX >= len(b.grid) || nextY < 0 || nextY >= len(b.grid[b.guard.y]) {
+		return true
+	}
+
+	if b.grid[nextY][nextX] == '#' {
+		b.guard.turn()
+		return b.move()
+	}
+	b.guard.x = nextX
+	b.guard.y = nextY
+	return false
+}
+
+func (g *guard) turn() {
+	g.dir = (g.dir + 1) % 4
+}
+
+func (g *guard) next() (x, y int) {
+	switch g.dir {
 	case up:
-		// check nextY position
-		nextY := b.guard.y - 1
-		if nextY < 0 {
-			return true, false
-		}
-
-		if b.grid[nextY][b.guard.x] == '#' {
-			b.guard.dir = (b.guard.dir + 1) % 4
-			return b.move()
-		}
-		if b.grid[nextY][b.guard.x] == 'X' {
-			b.guard.y--
-			return false, true
-		}
-		b.guard.y--
-		return false, false
+		return g.x, g.y - 1
 	case down:
-		nextY := b.guard.y + 1
-		if nextY >= len(b.grid) {
-			return true, false
-		}
-
-		if b.grid[nextY][b.guard.x] == '#' {
-			b.guard.dir = (b.guard.dir + 1) % 4
-			return b.move()
-		}
-
-		if b.grid[nextY][b.guard.x] == 'X' {
-			b.guard.y++
-			return false, true
-		}
-
-		b.guard.y++
-		return false, false
-	case right:
-		nextX := b.guard.x + 1
-		if nextX >= len(b.grid[b.guard.y]) {
-			return true, false
-		}
-
-		if b.grid[b.guard.y][nextX] == '#' {
-			b.guard.dir = (b.guard.dir + 1) % 4
-			return b.move()
-		}
-
-		if b.grid[b.guard.y][nextX] == 'X' {
-			b.guard.x++
-			return false, true
-		}
-		b.guard.x++
-		return false, false
+		return g.x, g.y + 1
 	case left:
-		nextX := b.guard.x - 1
-		if nextX < 0 {
-			return true, false
-		}
-
-		if b.grid[b.guard.y][nextX] == '#' {
-			b.guard.dir = (b.guard.dir + 1) % 4
-			return b.move()
-		}
-		if b.grid[b.guard.y][nextX] == 'X' {
-			b.guard.x--
-			return false, true
-		}
-		b.guard.x--
-		return false, false
+		return g.x - 1, g.y
+	case right:
+		return g.x + 1, g.y
 	default:
-		panic("")
+		panic("unexpected direction")
 	}
 }
 
@@ -143,16 +104,21 @@ func (b board) String() string {
 }
 
 func day06Part1(b board) (int, error) {
-	moves := 1
 	for {
-		done, visited := b.move()
-		if done {
-			return moves, nil
-		}
-		if !visited {
-			moves++
+		if b.move() {
+			break
 		}
 	}
+
+	moves := 0
+	for _, row := range b.grid {
+		for _, r := range row {
+			if r == 'X' {
+				moves++
+			}
+		}
+	}
+	return moves, nil
 }
 
 func day06Part2(input []string) (int, error) {
