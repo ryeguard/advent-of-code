@@ -1,4 +1,4 @@
-package main
+package day01
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"slices"
 )
 
-func day01(input []string) (int, int, error) {
+func Solution(input []string) (int, int, error) {
 	var leftLocations, rightLocations []int
 	for _, row := range input {
 		var v1, v2 int
@@ -19,18 +19,18 @@ func day01(input []string) (int, int, error) {
 		rightLocations = append(rightLocations, v2)
 	}
 
-	totalDistance, err := day01Part1(leftLocations, rightLocations)
+	totalDistance, err := part1(leftLocations, rightLocations)
 	if err != nil {
 		return 0, 0, fmt.Errorf("part 1: %w", err)
 	}
 
-	similarityScore := day01Part2(leftLocations, rightLocations)
+	similarityScore := part2(leftLocations, rightLocations)
 
 	return totalDistance, similarityScore, nil
 
 }
 
-func day01Part1(leftLocations, rightLocations []int) (totalDistance int, err error) {
+func part1(leftLocations, rightLocations []int) (totalDistance int, err error) {
 	if len(leftLocations) != len(rightLocations) {
 		return 0, errors.New("left and right lists have different length")
 	}
@@ -45,7 +45,7 @@ func day01Part1(leftLocations, rightLocations []int) (totalDistance int, err err
 	return
 }
 
-func day01Part2(left, right []int) (similarityScore int) {
+func part2(left, right []int) (similarityScore int) {
 	var leftOccurrences, rightOccurrences = map[int]int{}, map[int]int{}
 	for _, l := range left {
 		leftOccurrences[l]++

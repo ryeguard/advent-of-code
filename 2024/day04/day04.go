@@ -1,4 +1,4 @@
-package main
+package day04
 
 type board struct {
 	letters string
@@ -8,7 +8,7 @@ type board struct {
 
 const searchWord string = "XMAS"
 
-func day04(input []string) (int, int, error) {
+func Solution(input []string) (int, int, error) {
 	b := board{}
 	for _, in := range input {
 		b.letters += in
@@ -16,10 +16,10 @@ func day04(input []string) (int, int, error) {
 		b.height++
 	}
 
-	return day04Part1(b), day04Part2(b), nil
+	return part1(b), part2(b), nil
 }
 
-func day04Part1(b board) int {
+func part1(b board) int {
 	sums := map[direction]int{}
 	lineSums := map[int]int{}
 	for i, l := range b.letters {
@@ -51,7 +51,7 @@ func day04Part1(b board) int {
 	}
 	return sum
 }
-func day04Part2(b board) int {
+func part2(b board) int {
 	var sum int
 	for i, l := range b.letters {
 		if l != 'A' {

@@ -65,7 +65,7 @@ func TestDaysWithExample(t *testing.T) {
 		input, err := goac.ReadInput(fmt.Sprintf("example_data/day%02d.txt", tc.day))
 		require.NoError(t, err, msg)
 
-		part1, part2, err := dayFuncs[tc.day](input)
+		part1, part2, err := solutionFuncs[tc.day](input)
 		require.NoError(t, err, msg)
 
 		if tc.part1.answer != nil {
@@ -127,7 +127,7 @@ func TestDays(t *testing.T) {
 		input, err := goac.ReadInput(fmt.Sprintf("input_data/day%02d.txt", tc.day))
 		require.NoError(t, err, msg)
 
-		part1, part2, err := dayFuncs[tc.day](input)
+		part1, part2, err := solutionFuncs[tc.day](input)
 		require.NoError(t, err, msg)
 
 		if tc.part1.answer != nil {

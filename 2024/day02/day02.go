@@ -1,4 +1,4 @@
-package main
+package day02
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func day02Part1(reports []string) (int, error) {
+func part1(reports []string) (int, error) {
 	var sumSafeReports int
 
 	for _, report := range reports {
@@ -92,7 +92,7 @@ func checkReportSafeWithDampening(levels []int) bool {
 	return false
 }
 
-func day02Part2(reports []string) (int, error) {
+func part2(reports []string) (int, error) {
 	var sumSafeReports int
 
 	for _, report := range reports {
@@ -116,13 +116,13 @@ func day02Part2(reports []string) (int, error) {
 	return sumSafeReports, nil
 }
 
-func day02(reports []string) (int, int, error) {
-	part1, err := day02Part1(reports)
+func Solution(reports []string) (int, int, error) {
+	part1, err := part1(reports)
 	if err != nil {
 		return 0, 0, fmt.Errorf("part 1: %w", err)
 	}
 
-	part2, err := day02Part2(reports)
+	part2, err := part2(reports)
 	if err != nil {
 		return 0, 0, fmt.Errorf("part 2: %w", err)
 	}

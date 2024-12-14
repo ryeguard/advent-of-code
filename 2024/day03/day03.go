@@ -1,4 +1,4 @@
-package main
+package day03
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"regexp"
 )
 
-func day03(input []string) (int, int, error) {
+func Solution(input []string) (int, int, error) {
 	part1, err := day03Part2(input, `mul\([0-9]*,[0-9]*\)`)
 	if err != nil {
 		return 0, 0, fmt.Errorf("part 1: %w", err)

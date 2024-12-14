@@ -1,4 +1,4 @@
-package main
+package day05
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func day05(input []string) (int, int, error) {
+func Solution(input []string) (int, int, error) {
 	var rules [][2]int
 	var pages [][]int
 
