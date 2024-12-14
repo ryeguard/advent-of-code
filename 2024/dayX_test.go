@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/ryeguard/advent-of-code/goac"
 	"github.com/stretchr/testify/require"
 )
 
@@ -60,7 +61,7 @@ func TestDaysWithExample(t *testing.T) {
 	for _, tc := range tests {
 		msg := fmt.Sprintf("day %v [example data]", tc.day)
 
-		input, err := readInput(fmt.Sprintf("example_data/day%02d.txt", tc.day))
+		input, err := goac.ReadInput(fmt.Sprintf("example_data/day%02d.txt", tc.day))
 		require.NoError(t, err, msg)
 
 		part1, part2, err := dayFuncs[tc.day](input)
@@ -121,7 +122,7 @@ func TestDays(t *testing.T) {
 	for _, tc := range tests {
 		msg := fmt.Sprintf("day %v [input data]", tc.day)
 
-		input, err := readInput(fmt.Sprintf("input_data/day%02d.txt", tc.day))
+		input, err := goac.ReadInput(fmt.Sprintf("input_data/day%02d.txt", tc.day))
 		require.NoError(t, err, msg)
 
 		part1, part2, err := dayFuncs[tc.day](input)

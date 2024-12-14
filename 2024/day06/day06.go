@@ -1,6 +1,10 @@
 package day06
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ryeguard/advent-of-code/goac"
+)
 
 type direction int
 
@@ -22,13 +26,10 @@ type board struct {
 }
 
 func Solution(input []string) (int, int, error) {
-	b := board{
-		grid: [][]rune{},
-	}
+	b := board{grid: goac.ToGrid(input)}
+
 	for y, in := range input {
-		b.grid = append(b.grid, []rune{})
 		for x, c := range in {
-			b.grid[y] = append(b.grid[y], c)
 			if c == '^' {
 				b.guard = position{
 					x:   x,
