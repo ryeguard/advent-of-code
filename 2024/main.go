@@ -4,11 +4,15 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
+	"github.com/ryeguard/advent-of-code/2024/day00"
+	"github.com/ryeguard/advent-of-code/2024/day06"
 )
 
 var dayFuncs = [](func([]string) (int, int, error)){
-	day00, // template
+	day00.Solution, // template
 	day01, day02, day03, day04, day05,
+	day06.Solution,
 }
 
 func readInput(filename string) ([]string, error) {
@@ -28,7 +32,7 @@ func readInput(filename string) ([]string, error) {
 
 func main() {
 	daysToRun := []int{
-		4, 5,
+		6,
 	}
 
 	for _, d := range daysToRun {

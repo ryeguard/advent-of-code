@@ -19,7 +19,6 @@ const (
 )
 
 func newDay(args map[flag]string) error {
-	fmt.Println(args)
 	year, ok := args[YEAR]
 	if !ok {
 		year = strconv.Itoa(time.Now().Year())

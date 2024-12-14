@@ -51,6 +51,10 @@ func TestDaysWithExample(t *testing.T) {
 			part1: PartTest{answer: ptr(143)},
 			part2: PartTest{answer: ptr(123)},
 		},
+		{
+			day:   6,
+			part1: PartTest{answer: ptr(41)},
+		},
 	}
 
 	for _, tc := range tests {
@@ -107,6 +111,10 @@ func TestDays(t *testing.T) {
 			day:   5,
 			part1: PartTest{answer: ptr(6498)},
 			part2: PartTest{answer: ptr(5017)},
+		},
+		{
+			day:   6,
+			part1: PartTest{answer: ptr(5242)},
 		},
 	}
 

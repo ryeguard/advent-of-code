@@ -11,5 +11,5 @@ To build and run:
 go run . help
 
 # from the project root
-go run ./goac/... help
+go run ./goac/main.go help
 ```
