@@ -21,12 +21,13 @@ type guard struct {
 }
 
 type board struct {
-	grid  [][]rune
-	guard guard
+	grid          [][]rune
+	guard         guard
+	seenObstacles map[guard]bool
 }
 
 func Solution(input []string) (int, int, error) {
-	b := board{grid: goac.ToGrid(input)}
+	b := board{grid: goac.ToGrid(input), seenObstacles: map[guard]bool{}}
 
 	for y, in := range input {
 		for x, c := range in {
@@ -44,19 +45,19 @@ func Solution(input []string) (int, int, error) {
 		return 0, 0, fmt.Errorf("start position not found")
 	}
 
-	part1, err := day06Part1(b)
+	part1, err := part1(b)
 	if err != nil {
 		return 0, 0, fmt.Errorf("part 1: %w", err)
 	}
 
-	part2, err := day06Part2(input)
+	part2, err := part2(b)
 	if err != nil {
-		return 0, 0, fmt.Errorf("part 1: %w", err)
+		return 0, 0, fmt.Errorf("part 2: %w", err)
 	}
 	return part1, part2, nil
 }
 
-func (b *board) move() (done bool) {
+func (b *board) move() (done, loop bool) {
 	// mark current as visited
 	b.grid[b.guard.y][b.guard.x] = 'X'
 
@@ -64,16 +65,23 @@ func (b *board) move() (done bool) {
 
 	// bounds check
 	if nextX < 0 || nextX >= len(b.grid) || nextY < 0 || nextY >= len(b.grid[b.guard.y]) {
-		return true
+		return true, false
 	}
 
 	if b.grid[nextY][nextX] == '#' {
+		// Part 2: Check/save seen obstacles
+		if _, ok := b.seenObstacles[b.guard]; ok {
+			return true, true
+		} else {
+			b.seenObstacles[b.guard] = true
+		}
+
 		b.guard.turn()
 		return b.move()
 	}
 	b.guard.x = nextX
 	b.guard.y = nextY
-	return false
+	return false, false
 }
 
 func (g *guard) turn() {
@@ -103,9 +111,9 @@ func (b board) String() string {
 	return out
 }
 
-func day06Part1(b board) (int, error) {
+func part1(b board) (int, error) {
 	for {
-		if b.move() {
+		if done, _ := b.move(); done {
 			break
 		}
 	}
@@ -121,6 +129,51 @@ func day06Part1(b board) (int, error) {
 	return moves, nil
 }
 
-func day06Part2(input []string) (int, error) {
-	return 2, nil
+func part2(b board) (int, error) {
+	boardPart1 := b.copy()
+
+	// Solve like part 1 to get possible obstacle placements
+	for {
+		if done, _ := boardPart1.move(); done {
+			break
+		}
+	}
+
+	var infLoops int
+	for y, row := range b.grid {
+		for x, r := range row {
+			if r != 'X' {
+				continue
+			}
+			boardWithObstacle := b.copy()
+			boardWithObstacle.grid[y][x] = '#'
+
+			for {
+				done, loop := boardWithObstacle.move()
+				if loop {
+					infLoops++
+				}
+				if done {
+					break
+				}
+			}
+		}
+	}
+	return infLoops, nil
+}
+
+func (b board) copy() board {
+	board := board{grid: [][]rune{},
+		guard: guard{
+			x:   b.guard.x,
+			y:   b.guard.y,
+			dir: b.guard.dir,
+		},
+		seenObstacles: map[guard]bool{},
+	}
+	for y, row := range b.grid {
+		board.grid = append(board.grid, []rune{})
+		board.grid[y] = append(board.grid[y], row...)
+	}
+	return board
 }

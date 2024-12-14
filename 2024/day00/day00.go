@@ -10,7 +10,7 @@ func Solution(input []string) (int, int, error) {
 
 	part2, err := part2(input)
 	if err != nil {
-		return 0, 0, fmt.Errorf("part 1: %w", err)
+		return 0, 0, fmt.Errorf("part 2: %w", err)
 	}
 	return part1, part2, nil
 }
