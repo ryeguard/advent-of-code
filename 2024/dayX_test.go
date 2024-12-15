@@ -15,7 +15,7 @@ type DayTest struct {
 }
 
 type PartTest struct {
-	answer *int // Nil if answer is unknown
+	answer int // 0 if answer is unknown
 
 	incorrectGuess int
 	// E.g., require.Greater if the incorrect guess was met with "Your answer was too low".
@@ -26,7 +26,7 @@ func TestDaysWithExample(t *testing.T) {
 	var tests = []DayTest{
 		{
 			day:   0,
-			part1: PartTest{answer: ptr(1)},
+			part1: PartTest{answer: 1},
 			part2: PartTest{
 				hintFunc:       require.Greater,
 				incorrectGuess: 1,
@@ -34,32 +34,33 @@ func TestDaysWithExample(t *testing.T) {
 		},
 		{
 			day:   2,
-			part1: PartTest{answer: ptr(2)},
-			part2: PartTest{answer: ptr(4)},
+			part1: PartTest{answer: 2},
+			part2: PartTest{answer: 4},
 		},
 		{
 			day:   3,
-			part1: PartTest{answer: ptr(161)},
-			part2: PartTest{answer: ptr(48)},
+			part1: PartTest{answer: 161},
+			part2: PartTest{answer: 48},
 		},
 		{
 			day:   4,
-			part1: PartTest{answer: ptr(18)},
-			part2: PartTest{answer: ptr(9)},
+			part1: PartTest{answer: 18},
+			part2: PartTest{answer: 9},
 		},
 		{
 			day:   5,
-			part1: PartTest{answer: ptr(143)},
-			part2: PartTest{answer: ptr(123)},
+			part1: PartTest{answer: 143},
+			part2: PartTest{answer: 123},
 		},
 		{
 			day:   6,
-			part1: PartTest{answer: ptr(41)},
-			part2: PartTest{answer: ptr(6)},
+			part1: PartTest{answer: 41},
+			part2: PartTest{answer: 6},
 		},
 		{
 			day:   7,
-			part1: PartTest{answer: ptr(3749)},
+			part1: PartTest{answer: 3749},
+			part2: PartTest{answer: 11387},
 		},
 	}
 
@@ -72,14 +73,14 @@ func TestDaysWithExample(t *testing.T) {
 		part1, part2, err := solutionFuncs[tc.day](input)
 		require.NoError(t, err, msg)
 
-		if tc.part1.answer != nil {
-			require.Equal(t, *tc.part1.answer, part1, "%v: part 1", msg)
+		if tc.part1.answer != 0 {
+			require.Equal(t, tc.part1.answer, part1, "%v: part 1", msg)
 		} else if tc.part1.hintFunc != nil {
 			tc.part1.hintFunc(t, part1, tc.part1.incorrectGuess, "%v: part 1", msg)
 		}
 
-		if tc.part2.answer != nil {
-			require.Equal(t, *tc.part2.answer, part2, "%v: part 2", msg)
+		if tc.part2.answer != 0 {
+			require.Equal(t, tc.part2.answer, part2, "%v: part 2", msg)
 		} else if tc.part2.hintFunc != nil {
 			tc.part2.hintFunc(t, part2, tc.part2.incorrectGuess, "%v: part 2", msg)
 		}
@@ -90,42 +91,43 @@ func TestDays(t *testing.T) {
 	var tests = []DayTest{
 		{
 			day:   0,
-			part1: PartTest{answer: ptr(1)},
-			part2: PartTest{answer: ptr(2)},
+			part1: PartTest{answer: 1},
+			part2: PartTest{answer: 2},
 		},
 		{
 			day:   1,
-			part1: PartTest{answer: ptr(3246517)},
-			part2: PartTest{answer: ptr(29379307)},
+			part1: PartTest{answer: 3246517},
+			part2: PartTest{answer: 29379307},
 		},
 		{
 			day:   2,
-			part1: PartTest{answer: ptr(411)},
-			part2: PartTest{answer: ptr(465)},
+			part1: PartTest{answer: 411},
+			part2: PartTest{answer: 465},
 		},
 		{
 			day:   3,
-			part1: PartTest{answer: ptr(179834255)},
-			part2: PartTest{answer: ptr(80570939)},
+			part1: PartTest{answer: 179834255},
+			part2: PartTest{answer: 80570939},
 		},
 		{
 			day:   4,
-			part1: PartTest{answer: ptr(2462)},
-			part2: PartTest{answer: ptr(1877)},
+			part1: PartTest{answer: 2462},
+			part2: PartTest{answer: 1877},
 		},
 		{
 			day:   5,
-			part1: PartTest{answer: ptr(6498)},
-			part2: PartTest{answer: ptr(5017)},
+			part1: PartTest{answer: 6498},
+			part2: PartTest{answer: 5017},
 		},
 		{
 			day:   6,
-			part1: PartTest{answer: ptr(5242)},
-			part2: PartTest{answer: ptr(1424)},
+			part1: PartTest{answer: 5242},
+			part2: PartTest{answer: 1424},
 		},
 		{
 			day:   7,
-			part1: PartTest{incorrectGuess: 1399219271639, hintFunc: require.Less},
+			part1: PartTest{answer: 1399219271639},
+			part2: PartTest{answer: 275791737999003},
 		},
 	}
 
@@ -138,14 +140,14 @@ func TestDays(t *testing.T) {
 		part1, part2, err := solutionFuncs[tc.day](input)
 		require.NoError(t, err, msg)
 
-		if tc.part1.answer != nil {
-			require.Equal(t, *tc.part1.answer, part1, "%v: part 1", msg)
+		if tc.part1.answer != 0 {
+			require.Equal(t, tc.part1.answer, part1, "%v: part 1", msg)
 		} else if tc.part1.hintFunc != nil {
 			tc.part1.hintFunc(t, part1, tc.part1.incorrectGuess, "%v: part 1", msg)
 		}
 
-		if tc.part2.answer != nil {
-			require.Equal(t, *tc.part2.answer, part2, "%v: part 1", msg)
+		if tc.part2.answer != 0 {
+			require.Equal(t, tc.part2.answer, part2, "%v: part 1", msg)
 		} else if tc.part2.hintFunc != nil {
 			tc.part2.hintFunc(t, part2, tc.part2.incorrectGuess, "%v: part 2", msg)
 		}
