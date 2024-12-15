@@ -9,6 +9,7 @@ import (
 	"github.com/ryeguard/advent-of-code/2024/day04"
 	"github.com/ryeguard/advent-of-code/2024/day05"
 	"github.com/ryeguard/advent-of-code/2024/day06"
+	"github.com/ryeguard/advent-of-code/2024/day07"
 )
 
 var solutionFuncs = [](func([]string) (int, int, error)){
@@ -19,4 +20,5 @@ var solutionFuncs = [](func([]string) (int, int, error)){
 	day04.Solution,
 	day05.Solution,
 	day06.Solution,
+	day07.Solution,
 }

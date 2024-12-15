@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/ryeguard/advent-of-code/goac"
+	_ "golang.org/x/tools/go/packages" // import here, used in go:build ignore'd gen code
 )
 
 func main() {
