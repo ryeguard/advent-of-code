@@ -11,6 +11,22 @@ type equation struct {
 	numbers   []int
 }
 
+func Multiply(x, y int) int {
+	return x * y
+}
+
+func Add(x, y int) int {
+	return x + y
+}
+
+func Concat(x, y int) int {
+	concat, err := strconv.Atoi(fmt.Sprintf("%d%d", x, y))
+	if err != nil {
+		panic(err)
+	}
+	return concat
+}
+
 func Solution(input []string) (int, int, error) {
 	var equations []equation
 	for _, in := range input {
@@ -32,22 +48,22 @@ func Solution(input []string) (int, int, error) {
 		equations = append(equations, eq)
 	}
 
-	part1, err := part1(equations)
+	part1, err := partX(equations, []func(int, int) int{Add, Multiply})
 	if err != nil {
 		return 0, 0, fmt.Errorf("part 1: %w", err)
 	}
 
-	part2, err := part2(input)
+	part2, err := partX(equations, []func(int, int) int{Add, Multiply, Concat})
 	if err != nil {
 		return 0, 0, fmt.Errorf("part 2: %w", err)
 	}
 	return part1, part2, nil
 }
 
-func part1(eqs []equation) (int, error) {
+func partX(eqs []equation, operators []func(int, int) int) (int, error) {
 	var sum int
 	for _, eq := range eqs {
-		done := recurse(eq.testValue, eq.numbers[0], eq.numbers[1:])
+		done := recurse(eq.testValue, eq.numbers[0], eq.numbers[1:], operators)
 		if done {
 			sum += eq.testValue
 		}
@@ -55,24 +71,52 @@ func part1(eqs []equation) (int, error) {
 	return sum, nil
 }
 
-func recurse(target int, cumSum int, numbers []int) bool {
+func recurse(target int, currentValue int, numbers []int, operators []func(int, int) int) bool {
 	if len(numbers) < 1 {
 		return false
 	}
 
-	sum := cumSum + numbers[0]
-	product := cumSum * numbers[0]
+	var alternatives []int
+	for _, op := range operators {
+		alternatives = append(alternatives, op(currentValue, numbers[0]))
+	}
 
-	if product > target && sum > target {
+	// If value surpasses the target value we can return,
+	// since all operators only increase the value.
+	if all(alternatives, func(n int) bool {
+		return n > target
+	}) {
 		return false
 	}
-	if len(numbers) == 1 && (sum == target || product == target) {
+
+	if len(numbers) == 1 && any(alternatives, func(n int) bool {
+		return n == target
+	}) {
 		return true
 	}
 
-	return recurse(target, product, numbers[1:]) || recurse(target, sum, numbers[1:])
+	for _, alt := range alternatives {
+		if recurse(target, alt, numbers[1:], operators) {
+			return true
+		}
+	}
+	return false
 }
 
-func part2(input []string) (int, error) {
-	return len(input) + 2, nil
+func all(numbers []int, predicate func(n int) bool) bool {
+	for _, n := range numbers {
+		if !predicate(n) {
+			return false
+		}
+	}
+	return true
+}
+
+func any(numbers []int, predicate func(n int) bool) bool {
+	for _, n := range numbers {
+		if predicate(n) {
+			return true
+		}
+	}
+	return false
 }
