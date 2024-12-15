@@ -95,16 +95,13 @@ func recurse(target int, currentValue int, numbers []int, operators []func(int, 
 		return true
 	}
 
-	for _, alt := range alternatives {
-		if recurse(target, alt, numbers[1:], operators) {
-			return true
-		}
-	}
-	return false
+	return any(alternatives, func(alt int) bool {
+		return recurse(target, alt, numbers[1:], operators)
+	})
 }
 
-func all(numbers []int, predicate func(n int) bool) bool {
-	for _, n := range numbers {
+func all[E comparable](list []E, predicate func(e E) bool) bool {
+	for _, n := range list {
 		if !predicate(n) {
 			return false
 		}
@@ -112,9 +109,9 @@ func all(numbers []int, predicate func(n int) bool) bool {
 	return true
 }
 
-func any(numbers []int, predicate func(n int) bool) bool {
-	for _, n := range numbers {
-		if predicate(n) {
+func any[E comparable](list []E, predicate func(e E) bool) bool {
+	for _, e := range list {
+		if predicate(e) {
 			return true
 		}
 	}
