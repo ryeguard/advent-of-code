@@ -134,6 +134,11 @@ func TestDays(t *testing.T) {
 			part1: PartTest{answer: 1399219271639},
 			part2: PartTest{answer: 275791737999003},
 		},
+		{
+			day:   8,
+			part1: PartTest{answer: 291},
+			part2: PartTest{answer: 1015},
+		},
 	}
 
 	for _, tc := range tests {
