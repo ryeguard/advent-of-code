@@ -11,7 +11,7 @@ import (
 
 func main() {
 	daysToRun := []int{
-		6,
+		7,
 	}
 
 	for _, d := range daysToRun {
