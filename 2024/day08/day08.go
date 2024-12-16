@@ -1,8 +1,6 @@
 package day08
 
 import (
-	"fmt"
-
 	"github.com/ryeguard/advent-of-code/goac"
 )
 
@@ -11,7 +9,6 @@ type coordinate struct {
 }
 
 func Solution(input []string) (int, int, error) {
-
 	grid := goac.ToGrid(input)
 	antennas := map[rune][]coordinate{}
 	for y, row := range grid {
@@ -26,40 +23,17 @@ func Solution(input []string) (int, int, error) {
 		}
 	}
 
-	part1, err := part1(grid, antennas)
-	if err != nil {
-		return 0, 0, fmt.Errorf("part 1: %w", err)
-	}
+	part1 := part1(antennas, len(grid[0]), len(grid))
+	part2 := part2(antennas, len(grid[0]), len(grid))
 
-	part2, err := part2(grid, antennas)
-	if err != nil {
-		return 0, 0, fmt.Errorf("part 2: %w", err)
-	}
-	return part1, part2, nil
+	return countUnique(part1, len(grid[0]), len(grid)), countUnique(part2, len(grid[0]), len(grid)), nil
 }
 
-func part1(grid [][]rune, antennas map[rune][]coordinate) (int, error) {
-	var antinodes []coordinate
-	for frequency, coordinates := range antennas {
-		fmt.Println("f:", string(frequency))
-		for _, coord1 := range coordinates {
-			for _, coord2 := range coordinates {
-				if coord1 == coord2 {
-					continue
-				}
-				antinodes = append(antinodes, createAntinodes(coord1, coord2))
-			}
-		}
-	}
-
-	printGrid(grid)
-
-	fmt.Println(antennas)
-
+func countUnique(antinodes []coordinate, width, height int) int {
 	uniqueAntinodes := map[coordinate]bool{}
 	for _, an := range antinodes {
 		// bound check
-		if an.x < 0 || an.y < 0 || an.x >= len(grid[0]) || an.y >= len(grid) {
+		if an.x < 0 || an.y < 0 || an.x >= width || an.y >= height {
 			continue
 		}
 
@@ -67,63 +41,60 @@ func part1(grid [][]rune, antennas map[rune][]coordinate) (int, error) {
 			continue
 		} else {
 			uniqueAntinodes[an] = true
-			grid[an.y][an.x] = '#'
 		}
 	}
-	fmt.Println()
-	printGrid(grid)
-	return len(uniqueAntinodes), nil
+	return len(uniqueAntinodes)
 }
 
-func part2(grid [][]rune, antennas map[rune][]coordinate) (int, error) {
+func part1(antennas map[rune][]coordinate, width, height int) []coordinate {
 	var antinodes []coordinate
-	for frequency, coordinates := range antennas {
-		fmt.Println("f:", string(frequency))
+	for _, coordinates := range antennas {
 		for _, coord1 := range coordinates {
 			for _, coord2 := range coordinates {
 				if coord1 == coord2 {
 					continue
 				}
-				fmt.Println("hey")
-				antinodes = append(antinodes, createAntinodes2(coord1, coord2, len(grid[0]), len(grid))...)
+				antinodes = append(antinodes, createAntiNode(coord1, coord2, width, height)...)
+			}
+		}
+	}
+	return antinodes
+}
+
+func part2(antennas map[rune][]coordinate, width, height int) []coordinate {
+	var antinodes []coordinate
+	for _, coordinates := range antennas {
+		for _, coord1 := range coordinates {
+			for _, coord2 := range coordinates {
+				if coord1 == coord2 {
+					continue
+				}
+				antinodes = append(antinodes, createAntiNodes(coord1, coord2, width, height)...)
 			}
 		}
 	}
 
-	printGrid(grid)
-
-	fmt.Println(antennas)
-
-	uniqueAntinodes := map[coordinate]bool{}
-	for _, an := range antinodes {
-		// bound check
-		if an.x < 0 || an.y < 0 || an.x >= len(grid[0]) || an.y >= len(grid) {
-			continue
-		}
-
-		if _, ok := uniqueAntinodes[an]; ok {
-			continue
-		} else {
-			uniqueAntinodes[an] = true
-			grid[an.y][an.x] = '#'
-		}
-	}
-	fmt.Println()
-	printGrid(grid)
-	return len(uniqueAntinodes), nil
+	return antinodes
 }
 
-func createAntinodes(primary, secondary coordinate) coordinate {
-	return coordinate{
-		x: primary.x - 2*(primary.x-secondary.x),
-		y: primary.y - 2*(primary.y-secondary.y),
+// createAntiNode creates anti nodes for part 1
+func createAntiNode(primary, secondary coordinate, width, height int) []coordinate {
+	x := primary.x - 2*(primary.x-secondary.x)
+	y := primary.y - 2*(primary.y-secondary.y)
+	if x >= 0 && y >= 0 && x < width && y < height {
+		return []coordinate{{
+			x: x,
+			y: y,
+		}}
 	}
+	return nil
 }
 
-func createAntinodes2(primary, secondary coordinate, width, height int) []coordinate {
+// createAntiNodes creates anti nodes for part 2
+func createAntiNodes(primary, secondary coordinate, width, height int) []coordinate {
 	var x, y int = primary.x, primary.y
 	var coords []coordinate
-	iter := 1
+	iter := 0
 	for x >= 0 && y >= 0 && x < width && y < height {
 		x = primary.x - iter*(primary.x-secondary.x)
 		y = primary.y - iter*(primary.y-secondary.y)
@@ -134,13 +105,4 @@ func createAntinodes2(primary, secondary coordinate, width, height int) []coordi
 		iter++
 	}
 	return coords
-}
-
-func printGrid(grid [][]rune) {
-	for _, row := range grid {
-		for _, r := range row {
-			fmt.Printf("%v", string(r))
-		}
-		fmt.Println()
-	}
 }
