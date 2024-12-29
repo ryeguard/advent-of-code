@@ -14,13 +14,13 @@ import (
 )
 
 var solutionFuncs = [](func([]string) (int, int, error)){
-	day00.Solution,
-	day01.Solution,
-	day02.Solution,
-	day03.Solution,
-	day04.Solution,
-	day05.Solution,
-	day06.Solution,
-	day07.Solution,
-	day08.Solution,
+	0: day00.Solution,
+	1: day01.Solution,
+	2: day02.Solution,
+	3: day03.Solution,
+	4: day04.Solution,
+	5: day05.Solution,
+	6: day06.Solution,
+	7: day07.Solution,
+	8: day08.Solution,
 }

@@ -163,7 +163,3 @@ func TestDays(t *testing.T) {
 		}
 	}
 }
-
-func ptr(i int) *int {
-	return &i
-}

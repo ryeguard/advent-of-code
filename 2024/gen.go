@@ -6,6 +6,7 @@ import (
 	"flag"
 	"go/token"
 	"os"
+	"strconv"
 	"strings"
 	"text/template"
 
@@ -14,23 +15,39 @@ import (
 
 const mode packages.LoadMode = packages.NeedName
 
+type day struct {
+	Id   int
+	Name string
+}
+
 func main() {
 
 	pattern := flag.String("pattern", "./...", "Go package pattern")
 
-	var fset = token.NewFileSet()
-	cfg := &packages.Config{Fset: fset, Mode: mode, Dir: "."}
+	var fileSet = token.NewFileSet()
+	cfg := &packages.Config{Fset: fileSet, Mode: mode, Dir: "."}
 
 	pkgs, err := packages.Load(cfg, *pattern)
 	if err != nil {
 		panic(err)
 	}
 
-	var days []string
+	var days []day
 	for _, pkg := range pkgs {
-		if strings.HasPrefix(pkg.Name, "day") {
-			days = append(days, pkg.Name)
+		if !strings.HasPrefix(pkg.Name, "day") {
+			continue
 		}
+
+		trimmed := strings.TrimPrefix(pkg.Name, "day")
+		n, err := strconv.Atoi(trimmed)
+		if err != nil {
+			panic(err)
+		}
+
+		days = append(days, day{
+			Id:   n,
+			Name: pkg.Name,
+		})
 	}
 
 	f, err := os.Create("solution_gen.go")
@@ -40,7 +57,7 @@ func main() {
 	defer f.Close()
 
 	packageTemplate.Execute(f, struct {
-		Days []string
+		Days []day
 	}{
 		Days: days,
 	})
@@ -52,13 +69,13 @@ package main
 
 import (
 {{- range .Days }}
-	"{{"github.com/ryeguard/advent-of-code/2024/"}}{{ printf "%s" . }}"
+	"{{"github.com/ryeguard/advent-of-code/2024/"}}{{ printf "%s" .Name }}"
 {{- end }}
 )
 
 var solutionFuncs = [](func([]string) (int, int, error)){
 {{- range .Days }}
-	{{ printf "%s" . }}{{".Solution"}},
+	{{.Id}}: {{ printf "%s" .Name }}.Solution,
 {{- end }}
 }
 `))
