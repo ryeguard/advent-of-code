@@ -16,12 +16,12 @@ func Solution(input []string) (int, int, error) {
 		return 0, 0, fmt.Errorf("parse: %w", err)
 	}
 
-	part1, err := part1(parsed)
+	part1, err := part1And2(parsed, 1)
 	if err != nil {
 		return 0, 0, fmt.Errorf("part 1: %w", err)
 	}
 
-	part2, err := part2(parsed)
+	part2, err := part1And2(parsed, 2)
 	if err != nil {
 		return 0, 0, fmt.Errorf("part 2: %w", err)
 	}
@@ -32,30 +32,27 @@ func parse(input []string) (goac.Grid[int], error) {
 	return goac.IntGrid(input)
 }
 
-func part1(g goac.Grid[int]) (int, error) {
-
-	var trailheads []goac.Position
+func part1And2(g goac.Grid[int], part int) (int, error) {
+	var trailHeads []goac.Position
 	for r, row := range g.Data {
 		for c, e := range row {
 			if e != 0 {
 				continue
 			}
-
-			trailheads = append(trailheads, goac.Position{Row: r, Col: c})
+			trailHeads = append(trailHeads, goac.Position{Row: r, Col: c})
 		}
 	}
 
 	var success int
-
-	for _, th := range trailheads {
-		trails := findPathsRec(g, th)
-		found := map[goac.Position]bool{}
+	for _, th := range trailHeads {
+		trails := findCompleteTrails(g, th)
+		uniqueTrails := map[goac.Position]bool{}
 		for _, t := range trails {
 			if g.Here(t) == 9 {
-				if _, ok := found[t]; ok {
+				if _, ok := uniqueTrails[t]; ok && part == 1 {
 					continue
 				}
-				found[t] = true
+				uniqueTrails[t] = true
 				success++
 			}
 		}
@@ -64,7 +61,7 @@ func part1(g goac.Grid[int]) (int, error) {
 	return success, nil
 }
 
-func findPathsRec(grid goac.Grid[int], pos goac.Position) []goac.Position {
+func findCompleteTrails(grid goac.Grid[int], pos goac.Position) []goac.Position {
 	var out []goac.Position
 	for _, dir := range directions {
 		curr := grid.Here(pos)
@@ -81,33 +78,7 @@ func findPathsRec(grid goac.Grid[int], pos goac.Position) []goac.Position {
 			continue
 		}
 
-		out = append(out, findPathsRec(grid, nextPos)...)
+		out = append(out, findCompleteTrails(grid, nextPos)...)
 	}
 	return out
-}
-
-func findPaths(grid goac.Grid[int], pos goac.Position) []goac.Position {
-	var out []goac.Position
-	for _, dir := range directions {
-		curr := grid.Here(pos)
-		if curr == 9 {
-			return []goac.Position{pos}
-		}
-
-		nextValue, nextPos, ok := grid.Get(pos, dir)
-		if !ok {
-			continue
-		}
-
-		if nextValue-curr != 1 {
-			continue
-		}
-
-		out = append(out, nextPos)
-	}
-	return out
-}
-
-func part2(_ any) (int, error) {
-	return 2, nil
 }
