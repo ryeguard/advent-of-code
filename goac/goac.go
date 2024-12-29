@@ -11,6 +11,15 @@ type Gridable interface {
 	rune | int
 }
 
+type Direction int
+
+const (
+	Right Direction = iota
+	Down
+	Left
+	Up
+)
+
 func ReadInput(filename string) ([]string, error) {
 	file, err := os.Open(filename)
 	if err != nil {
@@ -30,6 +39,10 @@ type Grid[T Gridable] struct {
 	Data   [][]T
 	Width  int // The number of columns
 	Height int // The number of rows
+}
+
+type Position struct {
+	Row, Col int
 }
 
 func RuneGrid(input []string) Grid[rune] {
@@ -69,6 +82,39 @@ func IntGrid(input []string) (Grid[int], error) {
 		}
 	}
 	return g, nil
+}
+
+func (g Grid[T]) Get(pos Position, dir Direction) (T, Position, bool) {
+	var zero T
+
+	switch dir {
+	case Right:
+		if pos.Col+1 >= g.Width {
+			return zero, pos, false
+		}
+		pos.Col++
+	case Down:
+		if pos.Row+1 >= g.Height {
+			return zero, pos, false
+		}
+		pos.Row++
+	case Left:
+		if pos.Col-1 < 0 {
+			return zero, pos, false
+		}
+		pos.Col--
+	case Up:
+		if pos.Row-1 < 0 {
+			return zero, pos, false
+		}
+		pos.Row--
+	}
+
+	return g.Data[pos.Row][pos.Col], pos, true
+}
+
+func (g Grid[T]) Here(pos Position) T {
+	return g.Data[pos.Row][pos.Col]
 }
 
 func (g Grid[Gridable]) Copy() Grid[Gridable] {
