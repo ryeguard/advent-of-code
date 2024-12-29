@@ -9,9 +9,9 @@ type coordinate struct {
 }
 
 func Solution(input []string) (int, int, error) {
-	grid := goac.ToGrid(input)
+	grid := goac.RuneGrid(input)
 	antennas := map[rune][]coordinate{}
-	for y, row := range grid {
+	for y, row := range grid.Data {
 		for x, r := range row {
 			if r == '.' {
 				continue
@@ -23,10 +23,10 @@ func Solution(input []string) (int, int, error) {
 		}
 	}
 
-	part1 := part1(antennas, len(grid[0]), len(grid))
-	part2 := part2(antennas, len(grid[0]), len(grid))
+	part1 := part1(antennas, grid.Width, grid.Height)
+	part2 := part2(antennas, grid.Width, grid.Height)
 
-	return countUnique(part1, len(grid[0]), len(grid)), countUnique(part2, len(grid[0]), len(grid)), nil
+	return countUnique(part1, grid.Width, grid.Height), countUnique(part2, grid.Width, grid.Height), nil
 }
 
 func countUnique(antinodes []coordinate, width, height int) int {

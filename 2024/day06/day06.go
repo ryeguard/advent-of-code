@@ -21,13 +21,13 @@ type guard struct {
 }
 
 type board struct {
-	grid          [][]rune
+	goac.Grid[rune]
 	guard         guard
 	seenObstacles map[guard]bool
 }
 
 func Solution(input []string) (int, int, error) {
-	b := board{grid: goac.ToGrid(input), seenObstacles: map[guard]bool{}}
+	b := board{Grid: goac.RuneGrid(input), guard: guard{}, seenObstacles: map[guard]bool{}}
 
 	for y, in := range input {
 		for x, c := range in {
@@ -59,16 +59,16 @@ func Solution(input []string) (int, int, error) {
 
 func (b *board) move() (done, loop bool) {
 	// mark current as visited
-	b.grid[b.guard.y][b.guard.x] = 'X'
+	b.Data[b.guard.y][b.guard.x] = 'X'
 
 	nextX, nextY := b.guard.next()
 
 	// bounds check
-	if nextX < 0 || nextX >= len(b.grid) || nextY < 0 || nextY >= len(b.grid[b.guard.y]) {
+	if nextX < 0 || nextX >= b.Width || nextY < 0 || nextY >= b.Height {
 		return true, false
 	}
 
-	if b.grid[nextY][nextX] == '#' {
+	if b.Data[nextY][nextX] == '#' {
 		// Part 2: Check/save seen obstacles
 		if _, ok := b.seenObstacles[b.guard]; ok {
 			return true, true
@@ -103,14 +103,6 @@ func (g *guard) next() (x, y int) {
 	}
 }
 
-func (b board) String() string {
-	var out string
-	for _, row := range b.grid {
-		out = fmt.Sprintf("%v\n%v", out, string(row))
-	}
-	return out
-}
-
 func part1(b board) (int, error) {
 	for {
 		if done, _ := b.move(); done {
@@ -119,7 +111,7 @@ func part1(b board) (int, error) {
 	}
 
 	moves := 0
-	for _, row := range b.grid {
+	for _, row := range b.Data {
 		for _, r := range row {
 			if r == 'X' {
 				moves++
@@ -140,13 +132,13 @@ func part2(b board) (int, error) {
 	}
 
 	var infLoops int
-	for y, row := range b.grid {
+	for y, row := range b.Data {
 		for x, r := range row {
 			if r != 'X' {
 				continue
 			}
 			boardWithObstacle := b.copy()
-			boardWithObstacle.grid[y][x] = '#'
+			boardWithObstacle.Data[y][x] = '#'
 
 			for {
 				done, loop := boardWithObstacle.move()
@@ -163,17 +155,13 @@ func part2(b board) (int, error) {
 }
 
 func (b board) copy() board {
-	board := board{grid: [][]rune{},
-		guard: guard{
+	board := board{b.Grid.Copy(),
+		guard{
 			x:   b.guard.x,
 			y:   b.guard.y,
 			dir: b.guard.dir,
 		},
-		seenObstacles: map[guard]bool{},
-	}
-	for y, row := range b.grid {
-		board.grid = append(board.grid, []rune{})
-		board.grid[y] = append(board.grid[y], row...)
+		map[guard]bool{},
 	}
 	return board
 }
