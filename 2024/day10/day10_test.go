@@ -9,14 +9,10 @@ import (
 
 func TestFindCompleteTrails(t *testing.T) {
 	grid := goac.Grid[int]{
-		Data: [][]int{
-			{0, 1, 2, 3},
-			{8, 8, 8, 4},
-			{0, 0, 0, 5},
-			{9, 8, 7, 6},
-		},
-		Height: 4,
-		Width:  4,
+		{0, 1, 2, 3},
+		{8, 8, 8, 4},
+		{0, 0, 0, 5},
+		{9, 8, 7, 6},
 	}
 
 	var tests = []struct {

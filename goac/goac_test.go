@@ -8,23 +8,18 @@ import (
 
 func TestGridCopy(t *testing.T) {
 	g := Grid[rune]{
-		Data: [][]rune{
-			{'a', 'b', 'c'},
-			{'d', 'e', 'f'},
-		},
-		Width:  3,
-		Height: 2,
+		{'a', 'b', 'c'},
+		{'d', 'e', 'f'},
 	}
 
 	copy := g.Copy()
 
-	copy.Data[0][0] = 'x'
-	copy.Data = append(copy.Data, []rune{'g', 'h', 'i'})
-	copy.Height = 3
+	copy[0][0] = 'x'
+	copy = append(copy, []rune{'g', 'h', 'i'})
 
-	require.Equal(t, 'a', g.Data[0][0])
-	require.Equal(t, 'x', copy.Data[0][0])
+	require.Equal(t, 'a', g[0][0])
+	require.Equal(t, 'x', copy[0][0])
 
-	require.Equal(t, 2, g.Height)
-	require.Equal(t, 3, copy.Height)
+	require.Equal(t, 2, g.Height())
+	require.Equal(t, 3, copy.Height())
 }

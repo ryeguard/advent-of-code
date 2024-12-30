@@ -59,16 +59,16 @@ func Solution(input []string) (int, int, error) {
 
 func (b *board) move() (done, loop bool) {
 	// mark current as visited
-	b.Data[b.guard.y][b.guard.x] = 'X'
+	b.Grid[b.guard.y][b.guard.x] = 'X'
 
 	nextX, nextY := b.guard.next()
 
 	// bounds check
-	if nextX < 0 || nextX >= b.Width || nextY < 0 || nextY >= b.Height {
+	if nextX < 0 || nextX >= b.Width() || nextY < 0 || nextY >= b.Height() {
 		return true, false
 	}
 
-	if b.Data[nextY][nextX] == '#' {
+	if b.Grid[nextY][nextX] == '#' {
 		// Part 2: Check/save seen obstacles
 		if _, ok := b.seenObstacles[b.guard]; ok {
 			return true, true
@@ -111,7 +111,7 @@ func part1(b board) (int, error) {
 	}
 
 	moves := 0
-	for _, row := range b.Data {
+	for _, row := range b.Grid {
 		for _, r := range row {
 			if r == 'X' {
 				moves++
@@ -132,13 +132,13 @@ func part2(b board) (int, error) {
 	}
 
 	var infLoops int
-	for y, row := range b.Data {
+	for y, row := range b.Grid {
 		for x, r := range row {
 			if r != 'X' {
 				continue
 			}
 			boardWithObstacle := b.copy()
-			boardWithObstacle.Data[y][x] = '#'
+			boardWithObstacle.Grid[y][x] = '#'
 
 			for {
 				done, loop := boardWithObstacle.move()
