@@ -3,7 +3,7 @@ module github.com/ryeguard/advent-of-code/2024
 go 1.22.4
 
 require (
-	github.com/ryeguard/advent-of-code/goac v0.0.0-20241229212549-2efc153ea56e
+	github.com/ryeguard/advent-of-code/goac v0.0.0-20241230114631-0261377c64c1
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/tools v0.28.0
 )
