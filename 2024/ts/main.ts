@@ -1,8 +1,14 @@
-export function add(a: number, b: number): number {
-  return a + b;
+function day01(input: string): { part1: number, part2: number } {
+  const split = input.split("\n")
+  console.log(split)
+  const leftRight = split.map((val: string) => ({ left: val.split("  ")[0], right: val.split("  ")[1] }))
+  const left = leftRight.map((val, _) => (val.left)).sort()
+  console.log(left)
+  return { part1: input.length, part2: 1 }
 }
 
-// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
-  console.log("Add 2 + 3 =", add(2, 3));
+  const text = await Deno.readTextFile("./../example_data/day01.txt");
+  const { part1, part2 } = day01(text)
+  console.log(`part1: ${part1}, part2: ${part2}`)
 }
