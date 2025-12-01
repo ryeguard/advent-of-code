@@ -8,7 +8,6 @@ import (
 )
 
 func TestDay5ByPage(t *testing.T) {
-
 	rules := createSortingFunc(
 		[][2]int{
 			{47, 53},
@@ -35,7 +34,7 @@ func TestDay5ByPage(t *testing.T) {
 		},
 	)
 
-	var tests = []struct {
+	tests := []struct {
 		pages    []int
 		isSorted bool
 		sorted   []int

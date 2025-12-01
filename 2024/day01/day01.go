@@ -27,7 +27,6 @@ func Solution(input []string) (int, int, error) {
 	similarityScore := part2(leftLocations, rightLocations)
 
 	return totalDistance, similarityScore, nil
-
 }
 
 func part1(leftLocations, rightLocations []int) (totalDistance int, err error) {
@@ -46,7 +45,7 @@ func part1(leftLocations, rightLocations []int) (totalDistance int, err error) {
 }
 
 func part2(left, right []int) (similarityScore int) {
-	var leftOccurrences, rightOccurrences = map[int]int{}, map[int]int{}
+	leftOccurrences, rightOccurrences := map[int]int{}, map[int]int{}
 	for _, l := range left {
 		leftOccurrences[l]++
 	}

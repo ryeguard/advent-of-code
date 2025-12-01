@@ -7,7 +7,7 @@ import (
 )
 
 func TestPart1(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		stones map[int]int
 		blinks int
 		want   int

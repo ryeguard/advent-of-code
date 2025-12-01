@@ -7,7 +7,7 @@ import (
 )
 
 func TestRecurse(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		name string
 		eq   equation
 		want bool
@@ -66,7 +66,7 @@ func TestRecurse(t *testing.T) {
 }
 
 func TestRecursePart2(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		name string
 		eq   equation
 		want bool
@@ -90,7 +90,7 @@ func TestRecursePart2(t *testing.T) {
 }
 
 func TestConcat(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		x, y int
 		want int
 	}{

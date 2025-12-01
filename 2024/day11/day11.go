@@ -64,7 +64,7 @@ func part1And2(stones map[int]int, blinks int) (int, error) {
 		}
 		stones = afterBlink
 	}
-	
+
 	numStones := 0
 	for _, s := range stones {
 		numStones += s

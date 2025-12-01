@@ -7,7 +7,7 @@ import (
 )
 
 func TestCheckReportSafeWithDampening(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		in   []int
 		safe bool
 	}{
@@ -64,7 +64,7 @@ func TestCheckReportSafeWithDampening(t *testing.T) {
 }
 
 func TestPop(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		name     string
 		in       []int
 		index    int

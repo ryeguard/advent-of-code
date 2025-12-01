@@ -15,7 +15,7 @@ func TestFindCompleteTrails(t *testing.T) {
 		{9, 8, 7, 6},
 	}
 
-	var tests = []struct {
+	tests := []struct {
 		pos  goac.Position
 		want []goac.Position
 	}{

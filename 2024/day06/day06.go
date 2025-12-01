@@ -155,7 +155,8 @@ func part2(b board) (int, error) {
 }
 
 func (b board) copy() board {
-	board := board{b.Grid.Copy(),
+	board := board{
+		b.Grid.Copy(),
 		guard{
 			x:   b.guard.x,
 			y:   b.guard.y,

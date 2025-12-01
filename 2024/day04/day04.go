@@ -51,6 +51,7 @@ func part1(b board) int {
 	}
 	return sum
 }
+
 func part2(b board) int {
 	var sum int
 	for i, l := range b.letters {

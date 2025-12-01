@@ -23,7 +23,7 @@ type PartTest struct {
 }
 
 func TestDaysWithExample(t *testing.T) {
-	var tests = []DayTest{
+	tests := []DayTest{
 		{
 			day:   0,
 			part1: PartTest{answer: 1},
@@ -102,7 +102,7 @@ func TestDaysWithExample(t *testing.T) {
 }
 
 func TestDays(t *testing.T) {
-	var tests = []DayTest{
+	tests := []DayTest{
 		{
 			day:   0,
 			part1: PartTest{answer: 1},

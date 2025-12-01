@@ -39,7 +39,6 @@ func (r region) String() string {
 }
 
 func part1(grid goac.Grid[rune]) int {
-
 	regions := findRegions(grid)
 	slices.SortFunc(regions, func(a, b *region) int {
 		return a.id - b.id

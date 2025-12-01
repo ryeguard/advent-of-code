@@ -7,7 +7,7 @@ import (
 )
 
 func TestCreateAntinode(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		primary, secondary coordinate
 		want               []coordinate
 	}{

@@ -7,17 +7,17 @@ import (
 )
 
 func TestHasNeighbor(t *testing.T) {
-	//  0 1      8 9
-	//   MMMSXXMASM
-	//10 MSAMXMSMSA 19
-	//   AMXSXMAAMM
-	//   MSAMASMSMX
-	//   XMASAMXAMM
-	//   XXAMMXXAMA
-	//   SMSMSASXSS
-	//   SAXAMASAAA
-	//80 MAMMMXMMMM 89
-	//   MXMXAXMASX
+	//   0 1      8 9
+	//    MMMSXXMASM
+	// 10 MSAMXMSMSA 19
+	//    AMXSXMAAMM
+	//    MSAMASMSMX
+	//    XMASAMXAMM
+	//    XXAMMXXAMA
+	//    SMSMSASXSS
+	//    SAXAMASAAA
+	// 80 MAMMMXMMMM 89
+	//    MXMXAXMASX
 	// 90 91    98 99
 
 	b := board{
@@ -25,7 +25,7 @@ func TestHasNeighbor(t *testing.T) {
 		height: 10,
 	}
 
-	var tests = []struct {
+	tests := []struct {
 		index int
 		d     direction
 		want  bool
@@ -95,7 +95,7 @@ func TestHasNeighbor2(t *testing.T) {
 		height: 4,
 	}
 
-	var tests = []struct {
+	tests := []struct {
 		index int
 		d     direction
 		want  bool
@@ -123,7 +123,7 @@ func TestGetNeighbor(t *testing.T) {
 		letters: "0123ABCD4567EFGH",
 	}
 
-	var tests = []struct {
+	tests := []struct {
 		index      int
 		d          direction
 		wantLetter rune
