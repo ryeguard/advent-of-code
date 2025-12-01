@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/fs"
 	"os"
 	"os/exec"
 	"path"
@@ -19,6 +18,31 @@ const (
 	DAY  flag = "day"
 )
 
+func newYear(year string) (string, error) {
+	yearDir := path.Join(".", year)
+	err := os.Mkdir(yearDir, 0o755)
+	if err != nil {
+		if os.IsExist(err) {
+			// do nothing
+		} else {
+			return "", fmt.Errorf("mkdir: %w", err)
+		}
+	}
+
+	for _, dir := range []string{"example_data", "input_data"} {
+		err := os.Mkdir(path.Join(yearDir, dir), 0o755)
+		if err != nil {
+			if os.IsExist(err) {
+				// do nothing
+			} else {
+				return "", fmt.Errorf("mkdir: %w", err)
+			}
+		}
+	}
+
+	return yearDir, nil
+}
+
 func newDay(args map[flag]string) error {
 	year, ok := args[YEAR]
 	if !ok {
@@ -29,24 +53,21 @@ func newDay(args map[flag]string) error {
 		args[DAY] = strconv.Itoa(time.Now().Day())
 	}
 
+	yearDir, err := newYear(year)
+	if err != nil {
+		return fmt.Errorf("new year: %w", err)
+	}
+
 	day, err := strconv.Atoi(args[DAY])
 	if err != nil {
 		return fmt.Errorf("invalid value for flag %v: %v", DAY, args[DAY])
-	}
-
-	yearDir := path.Join(".", year)
-	fi, err := os.Stat(yearDir)
-	if err != nil {
-		return fmt.Errorf("cannot create day for non-existent year")
-	} else if !fi.IsDir() {
-		return fmt.Errorf("year directory exists not as directory")
 	}
 
 	templatePath := path.Join(yearDir, "day00", "day00.go")
 	dayStr := fmt.Sprintf("%02d", day)
 	destPath := path.Join(yearDir, "day"+dayStr, "day"+dayStr+".go")
 
-	fi, err = os.Stat(destPath)
+	fi, err := os.Stat(destPath)
 	if err != nil {
 		if os.IsNotExist(err) {
 			// expected
@@ -54,7 +75,7 @@ func newDay(args map[flag]string) error {
 		} else if os.IsNotExist(err) {
 			return fmt.Errorf("day already exists")
 		} else {
-			return errors.New("unknown error occurred")
+			return fmt.Errorf("unknown error occurred: %w", err)
 		}
 	} else {
 		fmt.Printf("%v already exists, will not overwrite...\n", fi.Name())
@@ -66,7 +87,7 @@ func newDay(args map[flag]string) error {
 	} {
 		err = exec.Command("touch", toTouch).Run()
 		if err != nil {
-			return fmt.Errorf("unable to create %v", toTouch)
+			return fmt.Errorf("unable to create %v: %w", toTouch, err)
 		}
 	}
 
@@ -79,7 +100,7 @@ func copyGoTemplate(template, dest, day string) error {
 		return err
 	}
 
-	if err := os.MkdirAll(path.Dir(dest), fs.ModePerm); err != nil {
+	if err := os.MkdirAll(path.Dir(dest), 0o755); err != nil {
 		return fmt.Errorf("mkdir: %w", err)
 	}
 
